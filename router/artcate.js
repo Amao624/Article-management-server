@@ -2,7 +2,7 @@ const express = require('express')
 // 创建路由对象
 const router = express.Router()
 // 导入用户路由处理函数模块
-const artcateHandler = require('../router_handler/artcate')
+const artcateHandler = require('../controller/artcate')
 //
 const expressJoi = require('@escook/express-joi')
 

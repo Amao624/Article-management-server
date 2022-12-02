@@ -2,7 +2,7 @@ const express = require('express')
 // 创建路由对象
 const router = express.Router()
 // 导入用户路由处理函数模块
-const userHandler = require('../router_handler/userinfo')
+const userHandler = require('../controller/userinfo')
 
 // 1. 导入验证表单数据的中间件
 const expressJoi = require('@escook/express-joi')
@@ -11,6 +11,8 @@ const { update_userinfo_schema, update_password_schema, update_avatar_schema } =
 
 //获取用户信息的路由
 router.get('/userinfo', userHandler.getUserInfo)
+// 获取用户权限的路由
+router.post('/userinfo/auth', userHandler.getAuth)
 //更新用户信息的路由
 router.post('/userinfo', expressJoi(update_userinfo_schema), userHandler.updateUserInfo)
 //用户修改密码的路由

@@ -64,17 +64,50 @@ exports.login = (req, res) => {
         //（JWT）Token 在生成Token字符串的时候，一定要剔除密码和头像的信息
         const user = { ...result[0], password: '', user_pic: '' }
         //生成Token字符串
-        const tokenStr = jwt.sign(user, tokenKey.jwtSecretKey, { expiresIn: '10h' })
+        const tokenStr = jwt.sign(user, tokenKey.jwtSecretKey, { expiresIn: '1h' })
         res.send({
             status: 0,
             message: '登录成功',
-            token: 'Bearer ' + tokenStr,
+            token: 'Bearer ' + tokenStr
         })
     })
 }
 
 // 退出登录的处理函数
 exports.logout = (req, res) => {
-    res.event('退出登录成功',200)
+    res.event('退出登录成功', 200)
 }
 
+// 获取文章信息的处理函数(标题，内容，发布时间)
+exports.getArticles = (req, res) => {
+    // 定义SQL查询语句
+    const sqlSelect = `select title,content,pub_date from articles where is_delete = 0`
+    db.query(sqlSelect, (err, results) => {
+        //SQL语句执行失败
+        if (err) return res.event(err)
+        // 执行SQL语句成功，但是可能查询的结果为空
+        if (results.length === 0) return res.event('获取文章信息失败！')
+        res.send({
+            status: 0,
+            message: '获取文章信息成功',
+            data: results,
+        })
+    })
+}
+
+// 根据文章id获取文章信息处理函数
+exports.getArticlesById = (req, res) => {
+    // 根据id查询文章数据库语句
+    const sql = `select * from articles where id = ?`
+    db.query(sql, req.params.id, (err, results) => {
+        // 执行 SQL 语句失败
+        if (err) return res.event(err)
+        // 执行 SQL 语句成功，但是影响行数不等于 1
+        if (results.length === 0) return res.event('获取文章信息失败！')
+        res.send({
+            status: 0,
+            message: '查询成功',
+            data: results
+        })
+    })
+}

@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs')
 //获取用户信息函数
 exports.getUserInfo = (req, res) => {
     //获取用户信息的SQL查询语句
-    const sqlSelect = `select id,username,nickname,email,user_pic from userinfo`
+    const sqlSelect = `select id,username,nickname,email,user_pic,auth from userinfo`
     //req.user.id是token解析成功，express-jwt中间件帮我们挂载上去的,只要身份认证成功了就会有该属性
     db.query(sqlSelect, req.user.id, (err, results) => {
         //SQL语句执行失败
@@ -20,6 +20,22 @@ exports.getUserInfo = (req, res) => {
             status: 0,
             message: '获取用户信息成功',
             data: results,
+        })
+    })
+}
+
+// 获取用户权限函数
+exports.getAuth = (req, res) => {
+    const sqlSelect = `select auth from userinfo where username=?`
+    db.query(sqlSelect, req.body.username, (err, results) => {
+        // 判断执行 SQL 语句失败
+        if (err) return res.event(err)
+        // 执行SQL语句成功，但是可能查询的结果为空
+        if (results.length === 0) return res.event('获取权限信息失败！')
+        res.send({
+            status: 0,
+            message: '获取权限信息成功',
+            auth: results[0].auth
         })
     })
 }

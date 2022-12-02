@@ -2,7 +2,7 @@ const express = require('express')
 // 创建路由对象
 const router = express.Router()
 // 导入用户路由处理函数模块
-const article_handler = require('../router_handler/articles')
+const article_handler = require('../controller/articles')
 //文章的校验规则
 const { add_articles_schema, change_articles_schema, get_articles_schema } = require('../schema/articles')
 const expressJoi = require('@escook/express-joi')

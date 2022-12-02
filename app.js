@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: false }))
 
 // 托管静态资源文件
 app.use('/uploads', express.static('./uploads'))
-// app.use(express.static('./build'))
 
 //设置跨域访问
 app.all('*', (req, res, next) => {
@@ -37,7 +36,7 @@ app.use(function (req, res, next) {
 
 //导入解析token的中间件
 const expressJwt = require('express-jwt')
-const tokenKey = require('./router_handler/config')
+const tokenKey = require('./controller/config')
 app.use(expressJwt({ secret: tokenKey.jwtSecretKey, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }))  //unless设置哪些接口不需要访问权限
 
 // 导入并注册用户路由模块
